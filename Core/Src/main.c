@@ -545,11 +545,7 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 {
   if(GPIO_Pin == GPIO_PIN_4)
  {
-
-    UART_SendChar("---222t!\r\n");
-
     SPI_CS1_LOW();
-    // HAL_Delay(1);
     uint32_t adc_value = 0;
     uint8_t msb = SPI_TransmitReceive(0xFF);  // 读取高8位
     uint8_t mid = SPI_TransmitReceive(0xFF);  // 读取中8位
@@ -559,8 +555,7 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 
     if(Is_ADC_Data_Valid(adc_value))
     {
-      float voltage = Convert_ADC_To_Voltage(adc_value);
-                
+      float voltage = Convert_ADC_To_Voltage(adc_value);    
       /* 将浮点数分解为整数部分和小数部分 */
       int32_t int_part = (int32_t)voltage;
       int32_t decimal_part = (int32_t)((voltage - int_part) * 1000000); // 保留6位小数
@@ -568,8 +563,12 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 
       /* 使用UART发送ADC和电压值 */
       char uart_buffer[64];
-      sprintf(uart_buffer, "ADC Raw: 0x%06lX (%ld), Voltage: %ld.%06ld V\r\n", 
-              adc_value, (int32_t)adc_value, int_part, decimal_part);
+      sprintf(uart_buffer, "ADC Voltage: %ld.%06ld V\r\n", 
+               int_part, decimal_part);
+
+
+              //       sprintf(uart_buffer, "ADC Raw: 0x%06lX (%ld), Voltage: %ld.%06ld V\r\n", 
+              // adc_value, (int32_t)adc_value, int_part, decimal_part);
       UART_SendChar(uart_buffer);
 
     }
@@ -578,19 +577,6 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
         UART_SendChar("Invalid ADC data.\r\n");
     }
 
-
-    // /* 读取24位ADC数据 */
-    // uint32_t adc_value = 0;
-    // uint8_t msb = SPI_TransmitReceive(0xFF);  // 读取高8位
-    // uint8_t mid = SPI_TransmitReceive(0xFF);  // 读取中8位
-    // uint8_t lsb = SPI_TransmitReceive(0xFF);  // 读取低8位
-    // adc_value = (uint32_t)msb << 16 | (uint32_t)mid << 8 | lsb;
-    // SPI_CS1_HIGH();
-
-    // /* 打印ADC值 */
-    // char uart_buffer[32];
-    // sprintf(uart_buffer, "ADC Value: %lu\r\n", adc_value);
-    // UART_SendChar(uart_buffer);
   }
 }
 /* USER CODE END 4 */
