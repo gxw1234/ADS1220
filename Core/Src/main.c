@@ -59,7 +59,7 @@ static void MX_I2C1_Init(void);
 static void MX_SPI1_Init(void);
 static void MX_UART4_Init(void);
 /* USER CODE BEGIN PFP */
-
+void UART_SendChar(uint8_t ch);  // 串口发送函数声明
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -363,13 +363,18 @@ static void MX_GPIO_Init(void)
 }
 
 /* USER CODE BEGIN 4 */
+// 串口发送函数定义
+void UART_SendChar(uint8_t ch)
+{
+    HAL_UART_Transmit(&huart4, &ch, 1, 100);
+}
+
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 {
   if(GPIO_Pin == GPIO_PIN_4)
   {
     HAL_GPIO_TogglePin(GPIOE, GPIO_PIN_3);  // LED状态翻转
-    uint8_t data = 'A';  // 发送字符'A'
-    HAL_UART_Transmit(&huart4, &data, 1, 100);  // 通过UART4发送
+    UART_SendChar('A');  // 使用封装的函数发送字符
   }
 }
 /* USER CODE END 4 */

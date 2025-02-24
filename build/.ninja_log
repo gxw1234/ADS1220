@@ -49,3 +49,5 @@
 743	1293	7620703963596598	CMakeFiles/debug_gpio.dir/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_spi.c.obj	bba765c2d8cb88eb
 799	1347	7620703964161445	CMakeFiles/debug_gpio.dir/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_uart.c.obj	df981f592e4c7aee
 1347	1534	7620703969638427	debug_gpio.elf	ea4ced3e893c0c75
+16	283	7620710205110876	CMakeFiles/debug_gpio.dir/Core/Src/main.c.obj	641b46ba1de054a
+284	477	7620710207785258	debug_gpio.elf	ea4ced3e893c0c75
