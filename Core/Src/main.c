@@ -31,7 +31,13 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
+/* CS1引脚控制宏定义 */
+#define SPI_CS1_LOW()       HAL_GPIO_WritePin(GPIOB, GPIO_PIN_4, GPIO_PIN_RESET)
+#define SPI_CS1_HIGH()      HAL_GPIO_WritePin(GPIOB, GPIO_PIN_4, GPIO_PIN_SET)
 
+/* CS2引脚控制宏定义 */
+#define SPI_CS2_LOW()       HAL_GPIO_WritePin(GPIOB, GPIO_PIN_5, GPIO_PIN_RESET)
+#define SPI_CS2_HIGH()      HAL_GPIO_WritePin(GPIOB, GPIO_PIN_5, GPIO_PIN_SET)
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -53,6 +59,8 @@ UART_HandleTypeDef huart4;
 
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
+static uint8_t Is_ADC_Data_Valid(uint32_t adc_value);
+static float Convert_ADC_To_Voltage(uint32_t adc_value);
 static void MPU_Config(void);
 static void MX_GPIO_Init(void);
 static void MX_I2C1_Init(void);
@@ -60,6 +68,85 @@ static void MX_SPI1_Init(void);
 static void MX_UART4_Init(void);
 /* USER CODE BEGIN PFP */
 void UART_SendChar(uint8_t ch);  // 串口发送函数声明
+
+
+static uint8_t SPI_TransmitReceive(uint8_t data);
+void SPI_Transmit(uint8_t data);
+
+
+
+uint32_t adc_value = 0;
+uint8_t msb = 0;  // 读取高8位
+uint8_t mid = 0;  // 读取中8位
+uint8_t lsb = 0;  // 读取低8位
+/* ADS1220参考电压 */
+#define VREF              2.048f    // 参考电压2.048V
+#define ADC_FSR           8388608.0f // 2^23, ADC满量程范围
+
+
+/* 将24位ADC数据转换为电压值 */
+static float Convert_ADC_To_Voltage(uint32_t adc_value)
+{
+    int32_t signed_value;
+    float voltage;
+    
+    // 如果是负数（最高位为1）
+    if(adc_value & 0x800000) {
+        signed_value = (int32_t)(adc_value | 0xFF000000);
+    } else {
+        signed_value = (int32_t)adc_value;
+    }
+    
+    // 将补码转换为电压值
+    voltage = ((float)signed_value * VREF) / ADC_FSR;
+    
+    return voltage;
+}
+
+
+
+/* 检查数据是否有效 */
+static uint8_t Is_ADC_Data_Valid(uint32_t adc_value)
+{
+    // 检查是否有异常的高位（24位以上应该都是0或1）
+    uint32_t high_bits = (adc_value >> 23) & 0x1FF;  // 检查高9位
+    return (high_bits == 0x000 || high_bits == 0x1FF);  // 应该全0或全1
+}
+
+void SPI_Transmit(uint8_t data) {
+    uint8_t txData[] = {data};  // 发送数据缓冲区
+    uint8_t rxData[1];          // 接收数据缓冲区
+
+    /* 拉低CS开始传输 */
+    // SPI_CS_LOW();
+    
+    /* 同时发送和接收数据 */
+    if(HAL_SPI_TransmitReceive(&hspi1, txData, rxData, sizeof(txData), 100) != HAL_OK)
+    {
+        Error_Handler();
+    }
+    /* 拉高CS结束传输 */
+    // SPI_CS_HIGH();
+
+    /* 打印发送和接收的数据 */
+    // UART_SendChar("SPI: TX=0x%02X, RX=0x%02X\n", txData[0], rxData[0]);
+}
+
+
+/* SPI发送接收函数 */
+static uint8_t SPI_TransmitReceive(uint8_t data) {
+    uint8_t txData[] = {data};  // 发送数据缓冲区
+    uint8_t rxData[1];          // 接收数据缓冲区
+
+    /* 同时发送和接收数据 */
+    if(HAL_SPI_TransmitReceive(&hspi1, txData, rxData, sizeof(txData), 100) != HAL_OK)
+    {
+        Error_Handler();
+    }
+
+    return rxData[0];
+}
+
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -108,6 +195,28 @@ int main(void)
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
+
+ /* 确保电源稳定，等待至少50us */
+    HAL_Delay(1);
+    SPI_CS1_LOW();
+    HAL_Delay(1);
+    SPI_Transmit(0x06); 
+    HAL_Delay(1);
+    SPI_Transmit(0x43);  // WREG命令，写寄存器3
+    SPI_Transmit(0x00);  // 配置数据 - 寄存器0：PGA=1, AIN0/AIN1
+    SPI_Transmit(0xD4);  // 配置数据 - 寄存器1：DR=20SPS, 连续转换模式
+    SPI_Transmit(0x10);  // 配置数据 - 寄存器2：IDAC关闭
+    SPI_Transmit(0x00);  // 配置数据 - 寄存器3：默认设置
+    HAL_Delay(1);
+    SPI_Transmit(0x23);
+
+    HAL_Delay(1);
+    /* 发送启动命令，开始连续转换 */
+    SPI_Transmit(0x08);  // START/SYNC命令
+    HAL_Delay(1);
+    SPI_CS1_HIGH();
+
+
   while (1)
   {
     /* USER CODE END WHILE */
@@ -267,9 +376,28 @@ static void MX_SPI1_Init(void)
     Error_Handler();
   }
   /* USER CODE BEGIN SPI1_Init 2 */
+  /* CS引脚配置 */
+  GPIO_InitTypeDef GPIO_InitStruct = {0};
+  
+  /* CS1引脚配置 */
+  GPIO_InitStruct.Pin = GPIO_PIN_4;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Pull = GPIO_PULLUP;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
+  HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+  /* CS1默认高电平 */
+  HAL_GPIO_WritePin(GPIOB, GPIO_PIN_4, GPIO_PIN_SET);
+  
+  /* CS2引脚配置 */
+  GPIO_InitStruct.Pin = GPIO_PIN_5;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Pull = GPIO_PULLUP;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
+  HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+  /* CS2默认高电平 */
+  HAL_GPIO_WritePin(GPIOB, GPIO_PIN_5, GPIO_PIN_SET);
 
   /* USER CODE END SPI1_Init 2 */
-
 }
 
 /**
@@ -348,6 +476,7 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOE, &GPIO_InitStruct);
 
+
   /*Configure GPIO pin : PD4 */
   GPIO_InitStruct.Pin = GPIO_PIN_4;
   GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING;
@@ -357,6 +486,8 @@ static void MX_GPIO_Init(void)
   /* EXTI interrupt init*/
   HAL_NVIC_SetPriority(EXTI4_IRQn, 1, 0);
   HAL_NVIC_EnableIRQ(EXTI4_IRQn);
+
+
 
 /* USER CODE BEGIN MX_GPIO_Init_2 */
 /* USER CODE END MX_GPIO_Init_2 */
@@ -373,8 +504,35 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 {
   if(GPIO_Pin == GPIO_PIN_4)
   {
-    HAL_GPIO_TogglePin(GPIOE, GPIO_PIN_3);  // LED状态翻转
-    UART_SendChar('A');  // 使用封装的函数发送字符
+
+    SPI_CS1_LOW();
+                /* 读取24位ADC数据 */
+    adc_value = 0;
+    msb = SPI_TransmitReceive(0xFF);  // 读取高8位
+    mid = SPI_TransmitReceive(0xFF);  // 读取中8位
+    lsb = SPI_TransmitReceive(0xFF);  // 读取低8位
+    SPI_CS1_HIGH();
+    adc_value = (uint32_t)msb << 16 | (uint32_t)mid << 8 | lsb;
+    if(Is_ADC_Data_Valid(adc_value))
+            {
+
+                              /* 转换为电压值 */
+                float voltage = Convert_ADC_To_Voltage(adc_value);
+                
+                /* 将浮点数分解为整数部分和小数部分 */
+                int32_t int_part = (int32_t)voltage;
+                int32_t decimal_part = (int32_t)((voltage - int_part) * 1000000); // 保留6位小数
+                if(decimal_part < 0) decimal_part = -decimal_part; // 确保小数部分为正
+                
+                /* 打印原始数据和转换后的电压值 */
+                // printf("ADC Raw: 0x%06lX (%ld), Voltage: %ld.%06ld V\n", 
+                //        adc_value, (int32_t)adc_value, int_part, decimal_part);
+
+            }
+
+
+    // HAL_GPIO_TogglePin(GPIOE, GPIO_PIN_3);  // LED状态翻转
+    // UART_SendChar('A');  // 使用封装的函数发送字符
   }
 }
 /* USER CODE END 4 */
