@@ -18,6 +18,8 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
+#include <stdio.h>
+#include <string.h>
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
@@ -67,7 +69,7 @@ static void MX_I2C1_Init(void);
 static void MX_SPI1_Init(void);
 static void MX_UART4_Init(void);
 /* USER CODE BEGIN PFP */
-void UART_SendChar(uint8_t ch);  // 串口发送函数声明
+void UART_SendChar(const char* str);  // 串口发送函数声明
 
 
 static uint8_t SPI_TransmitReceive(uint8_t data);
@@ -117,21 +119,17 @@ void SPI_Transmit(uint8_t data) {
     uint8_t txData[] = {data};  // 发送数据缓冲区
     uint8_t rxData[1];          // 接收数据缓冲区
 
-    /* 拉低CS开始传输 */
-    // SPI_CS_LOW();
-    
     /* 同时发送和接收数据 */
     if(HAL_SPI_TransmitReceive(&hspi1, txData, rxData, sizeof(txData), 100) != HAL_OK)
     {
         Error_Handler();
     }
-    /* 拉高CS结束传输 */
-    // SPI_CS_HIGH();
 
     /* 打印发送和接收的数据 */
-    // UART_SendChar("SPI: TX=0x%02X, RX=0x%02X\n", txData[0], rxData[0]);
+    char str[50];
+    sprintf(str, "SPI: TX=0x%02X, RX=0x%02X\r\n", txData[0], rxData[0]);
+    UART_SendChar(str);
 }
-
 
 /* SPI发送接收函数 */
 static uint8_t SPI_TransmitReceive(uint8_t data) {
@@ -143,6 +141,11 @@ static uint8_t SPI_TransmitReceive(uint8_t data) {
     {
         Error_Handler();
     }
+
+    /* 打印发送和接收的数据 */
+    // char str[50];
+    // sprintf(str, "SPI: TX=0x%02X, RX=0x%02X\r\n", txData[0], rxData[0]);
+    // UART_SendChar(str);
 
     return rxData[0];
 }
@@ -190,33 +193,40 @@ int main(void)
   MX_SPI1_Init();
   MX_UART4_Init();
   /* USER CODE BEGIN 2 */
+  UART_SendChar("System Start!\r\n");
+  HAL_Delay(1); 
 
-  /* USER CODE END 2 */
 
-  /* Infinite loop */
-  /* USER CODE BEGIN WHILE */
+  SPI_CS1_LOW();
+      /* 发送复位命令 */
+    SPI_Transmit(0x06);  // RESET命令
 
- /* 确保电源稳定，等待至少50us */
-    HAL_Delay(1);
-    SPI_CS1_LOW();
-    HAL_Delay(1);
-    SPI_Transmit(0x06); 
-    HAL_Delay(1);
+    HAL_Delay(1); 
+
+
     SPI_Transmit(0x43);  // WREG命令，写寄存器3
     SPI_Transmit(0x00);  // 配置数据 - 寄存器0：PGA=1, AIN0/AIN1
     SPI_Transmit(0xD4);  // 配置数据 - 寄存器1：DR=20SPS, 连续转换模式
     SPI_Transmit(0x10);  // 配置数据 - 寄存器2：IDAC关闭
     SPI_Transmit(0x00);  // 配置数据 - 寄存器3：默认设置
-    HAL_Delay(1);
+  HAL_Delay(1);
+
     SPI_Transmit(0x23);
+      HAL_Delay(1);
 
+    SPI_Transmit(0x08);  
     HAL_Delay(1);
-    /* 发送启动命令，开始连续转换 */
-    SPI_Transmit(0x08);  // START/SYNC命令
-    HAL_Delay(1);
-    SPI_CS1_HIGH();
 
+  SPI_CS1_HIGH();
 
+  HAL_Delay(1); 
+    UART_SendChar("--------System Start!\r\n");
+
+    MX_GPIO_Init();
+
+  /* USER CODE END 2 */
+
+  /* Infinite loop */
   while (1)
   {
     /* USER CODE END WHILE */
@@ -349,36 +359,67 @@ static void MX_SPI1_Init(void)
 
   /* USER CODE END SPI1_Init 1 */
   /* SPI1 parameter configuration*/
-  hspi1.Instance = SPI1;
-  hspi1.Init.Mode = SPI_MODE_MASTER;
-  hspi1.Init.Direction = SPI_DIRECTION_2LINES;
-  hspi1.Init.DataSize = SPI_DATASIZE_8BIT;
-  hspi1.Init.CLKPolarity = SPI_POLARITY_LOW;
-  hspi1.Init.CLKPhase = SPI_PHASE_2EDGE;
-  hspi1.Init.NSS = SPI_NSS_SOFT;
-  hspi1.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_2;
-  hspi1.Init.FirstBit = SPI_FIRSTBIT_MSB;
-  hspi1.Init.TIMode = SPI_TIMODE_DISABLE;
-  hspi1.Init.CRCCalculation = SPI_CRCCALCULATION_DISABLE;
-  hspi1.Init.CRCPolynomial = 0x0;
-  hspi1.Init.NSSPMode = SPI_NSS_PULSE_ENABLE;
-  hspi1.Init.NSSPolarity = SPI_NSS_POLARITY_LOW;
-  hspi1.Init.FifoThreshold = SPI_FIFO_THRESHOLD_01DATA;
-  hspi1.Init.TxCRCInitializationPattern = SPI_CRC_INITIALIZATION_ALL_ZERO_PATTERN;
-  hspi1.Init.RxCRCInitializationPattern = SPI_CRC_INITIALIZATION_ALL_ZERO_PATTERN;
-  hspi1.Init.MasterSSIdleness = SPI_MASTER_SS_IDLENESS_00CYCLE;
-  hspi1.Init.MasterInterDataIdleness = SPI_MASTER_INTERDATA_IDLENESS_00CYCLE;
-  hspi1.Init.MasterReceiverAutoSusp = SPI_MASTER_RX_AUTOSUSP_DISABLE;
-  hspi1.Init.MasterKeepIOState = SPI_MASTER_KEEP_IO_STATE_DISABLE;
-  hspi1.Init.IOSwap = SPI_IO_SWAP_DISABLE;
+  // hspi1.Instance = SPI1;
+  // hspi1.Init.Mode = SPI_MODE_MASTER;
+  // hspi1.Init.Direction = SPI_DIRECTION_2LINES;
+  // hspi1.Init.DataSize = SPI_DATASIZE_8BIT;
+  // hspi1.Init.CLKPolarity = SPI_POLARITY_LOW;
+  // hspi1.Init.CLKPhase = SPI_PHASE_2EDGE;
+  // hspi1.Init.NSS = SPI_NSS_SOFT;
+  // hspi1.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_2;
+  // hspi1.Init.FirstBit = SPI_FIRSTBIT_MSB;
+  // hspi1.Init.TIMode = SPI_TIMODE_DISABLE;
+  // hspi1.Init.CRCCalculation = SPI_CRCCALCULATION_DISABLE;
+  // hspi1.Init.CRCPolynomial = 0x0;
+  // hspi1.Init.NSSPMode = SPI_NSS_PULSE_ENABLE;
+  // hspi1.Init.NSSPolarity = SPI_NSS_POLARITY_LOW;
+  // hspi1.Init.FifoThreshold = SPI_FIFO_THRESHOLD_01DATA;
+  // hspi1.Init.TxCRCInitializationPattern = SPI_CRC_INITIALIZATION_ALL_ZERO_PATTERN;
+  // hspi1.Init.RxCRCInitializationPattern = SPI_CRC_INITIALIZATION_ALL_ZERO_PATTERN;
+  // hspi1.Init.MasterSSIdleness = SPI_MASTER_SS_IDLENESS_00CYCLE;
+  // hspi1.Init.MasterInterDataIdleness = SPI_MASTER_INTERDATA_IDLENESS_00CYCLE;
+  // hspi1.Init.MasterReceiverAutoSusp = SPI_MASTER_RX_AUTOSUSP_DISABLE;
+  // hspi1.Init.MasterKeepIOState = SPI_MASTER_KEEP_IO_STATE_DISABLE;
+  // hspi1.Init.IOSwap = SPI_IO_SWAP_DISABLE;
+
+
+    /* SPI1 参数配置 */
+    hspi1.Instance = SPI1;
+    hspi1.Init.Mode = SPI_MODE_MASTER;
+    hspi1.Init.Direction = SPI_DIRECTION_2LINES;
+    hspi1.Init.DataSize = SPI_DATASIZE_8BIT;
+    hspi1.Init.CLKPolarity = SPI_POLARITY_LOW;    // CPOL = 0
+    hspi1.Init.CLKPhase = SPI_PHASE_2EDGE;        // CPHA = 1
+    hspi1.Init.NSS = SPI_NSS_SOFT;
+    hspi1.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_32;  // 确保SCLK周期>150ns
+    hspi1.Init.FirstBit = SPI_FIRSTBIT_MSB;
+    hspi1.Init.TIMode = SPI_TIMODE_DISABLE;
+    hspi1.Init.CRCCalculation = SPI_CRCCALCULATION_DISABLE;
+    hspi1.Init.CRCPolynomial = 7;
+    hspi1.Init.NSSPMode = SPI_NSS_PULSE_DISABLE;
+    hspi1.Init.FifoThreshold = SPI_FIFO_THRESHOLD_01DATA;
+    hspi1.Init.MasterKeepIOState = SPI_MASTER_KEEP_IO_STATE_ENABLE;
+
+
+
   if (HAL_SPI_Init(&hspi1) != HAL_OK)
   {
     Error_Handler();
   }
+
+
+
+
+
+
   /* USER CODE BEGIN SPI1_Init 2 */
   /* CS引脚配置 */
   GPIO_InitTypeDef GPIO_InitStruct = {0};
   
+
+
+
+
   /* CS1引脚配置 */
   GPIO_InitStruct.Pin = GPIO_PIN_4;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
@@ -438,7 +479,7 @@ static void MX_UART4_Init(void)
   {
     Error_Handler();
   }
-  if (HAL_UARTEx_DisableFifoMode(&huart4) != HAL_OK)
+  if (HAL_UARTEx_EnableFifoMode(&huart4) != HAL_OK)  // 启用FIFO模式
   {
     Error_Handler();
   }
@@ -495,44 +536,61 @@ static void MX_GPIO_Init(void)
 
 /* USER CODE BEGIN 4 */
 // 串口发送函数定义
-void UART_SendChar(uint8_t ch)
+void UART_SendChar(const char* str)
 {
-    HAL_UART_Transmit(&huart4, &ch, 1, 100);
+    HAL_UART_Transmit(&huart4, (uint8_t*)str, strlen(str), 100);
 }
 
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 {
   if(GPIO_Pin == GPIO_PIN_4)
-  {
+ {
+
+    UART_SendChar("---222t!\r\n");
 
     SPI_CS1_LOW();
-                /* 读取24位ADC数据 */
-    adc_value = 0;
-    msb = SPI_TransmitReceive(0xFF);  // 读取高8位
-    mid = SPI_TransmitReceive(0xFF);  // 读取中8位
-    lsb = SPI_TransmitReceive(0xFF);  // 读取低8位
-    SPI_CS1_HIGH();
+    // HAL_Delay(1);
+    uint32_t adc_value = 0;
+    uint8_t msb = SPI_TransmitReceive(0xFF);  // 读取高8位
+    uint8_t mid = SPI_TransmitReceive(0xFF);  // 读取中8位
+    uint8_t lsb = SPI_TransmitReceive(0xFF);  // 读取低8位
     adc_value = (uint32_t)msb << 16 | (uint32_t)mid << 8 | lsb;
+    SPI_CS1_HIGH();
+
     if(Is_ADC_Data_Valid(adc_value))
-            {
-
-                              /* 转换为电压值 */
-                float voltage = Convert_ADC_To_Voltage(adc_value);
+    {
+      float voltage = Convert_ADC_To_Voltage(adc_value);
                 
-                /* 将浮点数分解为整数部分和小数部分 */
-                int32_t int_part = (int32_t)voltage;
-                int32_t decimal_part = (int32_t)((voltage - int_part) * 1000000); // 保留6位小数
-                if(decimal_part < 0) decimal_part = -decimal_part; // 确保小数部分为正
-                
-                /* 打印原始数据和转换后的电压值 */
-                // printf("ADC Raw: 0x%06lX (%ld), Voltage: %ld.%06ld V\n", 
-                //        adc_value, (int32_t)adc_value, int_part, decimal_part);
+      /* 将浮点数分解为整数部分和小数部分 */
+      int32_t int_part = (int32_t)voltage;
+      int32_t decimal_part = (int32_t)((voltage - int_part) * 1000000); // 保留6位小数
+      if(decimal_part < 0) decimal_part = -decimal_part; // 确保小数部分为正
 
-            }
+      /* 使用UART发送ADC和电压值 */
+      char uart_buffer[64];
+      sprintf(uart_buffer, "ADC Raw: 0x%06lX (%ld), Voltage: %ld.%06ld V\r\n", 
+              adc_value, (int32_t)adc_value, int_part, decimal_part);
+      UART_SendChar(uart_buffer);
+
+    }
+    else
+    {
+        UART_SendChar("Invalid ADC data.\r\n");
+    }
 
 
-    // HAL_GPIO_TogglePin(GPIOE, GPIO_PIN_3);  // LED状态翻转
-    // UART_SendChar('A');  // 使用封装的函数发送字符
+    // /* 读取24位ADC数据 */
+    // uint32_t adc_value = 0;
+    // uint8_t msb = SPI_TransmitReceive(0xFF);  // 读取高8位
+    // uint8_t mid = SPI_TransmitReceive(0xFF);  // 读取中8位
+    // uint8_t lsb = SPI_TransmitReceive(0xFF);  // 读取低8位
+    // adc_value = (uint32_t)msb << 16 | (uint32_t)mid << 8 | lsb;
+    // SPI_CS1_HIGH();
+
+    // /* 打印ADC值 */
+    // char uart_buffer[32];
+    // sprintf(uart_buffer, "ADC Value: %lu\r\n", adc_value);
+    // UART_SendChar(uart_buffer);
   }
 }
 /* USER CODE END 4 */

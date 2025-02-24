@@ -81,6 +81,22 @@ build CMakeFiles/debug_gpio.dir/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_c
   OBJECT_DIR = CMakeFiles\debug_gpio.dir
   OBJECT_FILE_DIR = CMakeFiles\debug_gpio.dir\Drivers\STM32H7xx_HAL_Driver\Src
 
+build CMakeFiles/debug_gpio.dir/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_i2c.c.obj: C_COMPILER__debug_gpio_unscanned_Debug D$:/STM32OBJ/test_1/debug_gpio/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_i2c.c || cmake_object_order_depends_target_debug_gpio
+  DEFINES = -DDEBUG -DSTM32H750xx -DUSE_HAL_DRIVER -DUSE_PWR_LDO_SUPPLY
+  DEP_FILE = CMakeFiles\debug_gpio.dir\Drivers\STM32H7xx_HAL_Driver\Src\stm32h7xx_hal_i2c.c.obj.d
+  FLAGS = -mcpu=cortex-m7 -mfpu=fpv5-d16 -mfloat-abi=hard  -Wall -Wextra -Wpedantic -fdata-sections -ffunction-sections -O0 -g3 -mcpu=cortex-m7 -mfpu=fpv5-d16 -mfloat-abi=hard  -Wall -Wextra -Wpedantic -fdata-sections -ffunction-sections -O0 -g3 -g -std=gnu11
+  INCLUDES = -ID:/STM32OBJ/test_1/debug_gpio/cmake/stm32cubemx/../../Core/Inc -ID:/STM32OBJ/test_1/debug_gpio/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc -ID:/STM32OBJ/test_1/debug_gpio/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/Legacy -ID:/STM32OBJ/test_1/debug_gpio/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include -ID:/STM32OBJ/test_1/debug_gpio/cmake/stm32cubemx/../../Drivers/CMSIS/Include
+  OBJECT_DIR = CMakeFiles\debug_gpio.dir
+  OBJECT_FILE_DIR = CMakeFiles\debug_gpio.dir\Drivers\STM32H7xx_HAL_Driver\Src
+
+build CMakeFiles/debug_gpio.dir/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_i2c_ex.c.obj: C_COMPILER__debug_gpio_unscanned_Debug D$:/STM32OBJ/test_1/debug_gpio/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_i2c_ex.c || cmake_object_order_depends_target_debug_gpio
+  DEFINES = -DDEBUG -DSTM32H750xx -DUSE_HAL_DRIVER -DUSE_PWR_LDO_SUPPLY
+  DEP_FILE = CMakeFiles\debug_gpio.dir\Drivers\STM32H7xx_HAL_Driver\Src\stm32h7xx_hal_i2c_ex.c.obj.d
+  FLAGS = -mcpu=cortex-m7 -mfpu=fpv5-d16 -mfloat-abi=hard  -Wall -Wextra -Wpedantic -fdata-sections -ffunction-sections -O0 -g3 -mcpu=cortex-m7 -mfpu=fpv5-d16 -mfloat-abi=hard  -Wall -Wextra -Wpedantic -fdata-sections -ffunction-sections -O0 -g3 -g -std=gnu11
+  INCLUDES = -ID:/STM32OBJ/test_1/debug_gpio/cmake/stm32cubemx/../../Core/Inc -ID:/STM32OBJ/test_1/debug_gpio/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc -ID:/STM32OBJ/test_1/debug_gpio/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/Legacy -ID:/STM32OBJ/test_1/debug_gpio/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include -ID:/STM32OBJ/test_1/debug_gpio/cmake/stm32cubemx/../../Drivers/CMSIS/Include
+  OBJECT_DIR = CMakeFiles\debug_gpio.dir
+  OBJECT_FILE_DIR = CMakeFiles\debug_gpio.dir\Drivers\STM32H7xx_HAL_Driver\Src
+
 build CMakeFiles/debug_gpio.dir/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_rcc.c.obj: C_COMPILER__debug_gpio_unscanned_Debug D$:/STM32OBJ/test_1/debug_gpio/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_rcc.c || cmake_object_order_depends_target_debug_gpio
   DEFINES = -DDEBUG -DSTM32H750xx -DUSE_HAL_DRIVER -DUSE_PWR_LDO_SUPPLY
   DEP_FILE = CMakeFiles\debug_gpio.dir\Drivers\STM32H7xx_HAL_Driver\Src\stm32h7xx_hal_rcc.c.obj.d
@@ -177,25 +193,41 @@ build CMakeFiles/debug_gpio.dir/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal.c
   OBJECT_DIR = CMakeFiles\debug_gpio.dir
   OBJECT_FILE_DIR = CMakeFiles\debug_gpio.dir\Drivers\STM32H7xx_HAL_Driver\Src
 
-build CMakeFiles/debug_gpio.dir/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_i2c.c.obj: C_COMPILER__debug_gpio_unscanned_Debug D$:/STM32OBJ/test_1/debug_gpio/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_i2c.c || cmake_object_order_depends_target_debug_gpio
-  DEFINES = -DDEBUG -DSTM32H750xx -DUSE_HAL_DRIVER -DUSE_PWR_LDO_SUPPLY
-  DEP_FILE = CMakeFiles\debug_gpio.dir\Drivers\STM32H7xx_HAL_Driver\Src\stm32h7xx_hal_i2c.c.obj.d
-  FLAGS = -mcpu=cortex-m7 -mfpu=fpv5-d16 -mfloat-abi=hard  -Wall -Wextra -Wpedantic -fdata-sections -ffunction-sections -O0 -g3 -mcpu=cortex-m7 -mfpu=fpv5-d16 -mfloat-abi=hard  -Wall -Wextra -Wpedantic -fdata-sections -ffunction-sections -O0 -g3 -g -std=gnu11
-  INCLUDES = -ID:/STM32OBJ/test_1/debug_gpio/cmake/stm32cubemx/../../Core/Inc -ID:/STM32OBJ/test_1/debug_gpio/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc -ID:/STM32OBJ/test_1/debug_gpio/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/Legacy -ID:/STM32OBJ/test_1/debug_gpio/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include -ID:/STM32OBJ/test_1/debug_gpio/cmake/stm32cubemx/../../Drivers/CMSIS/Include
-  OBJECT_DIR = CMakeFiles\debug_gpio.dir
-  OBJECT_FILE_DIR = CMakeFiles\debug_gpio.dir\Drivers\STM32H7xx_HAL_Driver\Src
-
-build CMakeFiles/debug_gpio.dir/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_i2c_ex.c.obj: C_COMPILER__debug_gpio_unscanned_Debug D$:/STM32OBJ/test_1/debug_gpio/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_i2c_ex.c || cmake_object_order_depends_target_debug_gpio
-  DEFINES = -DDEBUG -DSTM32H750xx -DUSE_HAL_DRIVER -DUSE_PWR_LDO_SUPPLY
-  DEP_FILE = CMakeFiles\debug_gpio.dir\Drivers\STM32H7xx_HAL_Driver\Src\stm32h7xx_hal_i2c_ex.c.obj.d
-  FLAGS = -mcpu=cortex-m7 -mfpu=fpv5-d16 -mfloat-abi=hard  -Wall -Wextra -Wpedantic -fdata-sections -ffunction-sections -O0 -g3 -mcpu=cortex-m7 -mfpu=fpv5-d16 -mfloat-abi=hard  -Wall -Wextra -Wpedantic -fdata-sections -ffunction-sections -O0 -g3 -g -std=gnu11
-  INCLUDES = -ID:/STM32OBJ/test_1/debug_gpio/cmake/stm32cubemx/../../Core/Inc -ID:/STM32OBJ/test_1/debug_gpio/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc -ID:/STM32OBJ/test_1/debug_gpio/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/Legacy -ID:/STM32OBJ/test_1/debug_gpio/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include -ID:/STM32OBJ/test_1/debug_gpio/cmake/stm32cubemx/../../Drivers/CMSIS/Include
-  OBJECT_DIR = CMakeFiles\debug_gpio.dir
-  OBJECT_FILE_DIR = CMakeFiles\debug_gpio.dir\Drivers\STM32H7xx_HAL_Driver\Src
-
 build CMakeFiles/debug_gpio.dir/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_exti.c.obj: C_COMPILER__debug_gpio_unscanned_Debug D$:/STM32OBJ/test_1/debug_gpio/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_exti.c || cmake_object_order_depends_target_debug_gpio
   DEFINES = -DDEBUG -DSTM32H750xx -DUSE_HAL_DRIVER -DUSE_PWR_LDO_SUPPLY
   DEP_FILE = CMakeFiles\debug_gpio.dir\Drivers\STM32H7xx_HAL_Driver\Src\stm32h7xx_hal_exti.c.obj.d
+  FLAGS = -mcpu=cortex-m7 -mfpu=fpv5-d16 -mfloat-abi=hard  -Wall -Wextra -Wpedantic -fdata-sections -ffunction-sections -O0 -g3 -mcpu=cortex-m7 -mfpu=fpv5-d16 -mfloat-abi=hard  -Wall -Wextra -Wpedantic -fdata-sections -ffunction-sections -O0 -g3 -g -std=gnu11
+  INCLUDES = -ID:/STM32OBJ/test_1/debug_gpio/cmake/stm32cubemx/../../Core/Inc -ID:/STM32OBJ/test_1/debug_gpio/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc -ID:/STM32OBJ/test_1/debug_gpio/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/Legacy -ID:/STM32OBJ/test_1/debug_gpio/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include -ID:/STM32OBJ/test_1/debug_gpio/cmake/stm32cubemx/../../Drivers/CMSIS/Include
+  OBJECT_DIR = CMakeFiles\debug_gpio.dir
+  OBJECT_FILE_DIR = CMakeFiles\debug_gpio.dir\Drivers\STM32H7xx_HAL_Driver\Src
+
+build CMakeFiles/debug_gpio.dir/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_spi.c.obj: C_COMPILER__debug_gpio_unscanned_Debug D$:/STM32OBJ/test_1/debug_gpio/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_spi.c || cmake_object_order_depends_target_debug_gpio
+  DEFINES = -DDEBUG -DSTM32H750xx -DUSE_HAL_DRIVER -DUSE_PWR_LDO_SUPPLY
+  DEP_FILE = CMakeFiles\debug_gpio.dir\Drivers\STM32H7xx_HAL_Driver\Src\stm32h7xx_hal_spi.c.obj.d
+  FLAGS = -mcpu=cortex-m7 -mfpu=fpv5-d16 -mfloat-abi=hard  -Wall -Wextra -Wpedantic -fdata-sections -ffunction-sections -O0 -g3 -mcpu=cortex-m7 -mfpu=fpv5-d16 -mfloat-abi=hard  -Wall -Wextra -Wpedantic -fdata-sections -ffunction-sections -O0 -g3 -g -std=gnu11
+  INCLUDES = -ID:/STM32OBJ/test_1/debug_gpio/cmake/stm32cubemx/../../Core/Inc -ID:/STM32OBJ/test_1/debug_gpio/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc -ID:/STM32OBJ/test_1/debug_gpio/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/Legacy -ID:/STM32OBJ/test_1/debug_gpio/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include -ID:/STM32OBJ/test_1/debug_gpio/cmake/stm32cubemx/../../Drivers/CMSIS/Include
+  OBJECT_DIR = CMakeFiles\debug_gpio.dir
+  OBJECT_FILE_DIR = CMakeFiles\debug_gpio.dir\Drivers\STM32H7xx_HAL_Driver\Src
+
+build CMakeFiles/debug_gpio.dir/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_spi_ex.c.obj: C_COMPILER__debug_gpio_unscanned_Debug D$:/STM32OBJ/test_1/debug_gpio/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_spi_ex.c || cmake_object_order_depends_target_debug_gpio
+  DEFINES = -DDEBUG -DSTM32H750xx -DUSE_HAL_DRIVER -DUSE_PWR_LDO_SUPPLY
+  DEP_FILE = CMakeFiles\debug_gpio.dir\Drivers\STM32H7xx_HAL_Driver\Src\stm32h7xx_hal_spi_ex.c.obj.d
+  FLAGS = -mcpu=cortex-m7 -mfpu=fpv5-d16 -mfloat-abi=hard  -Wall -Wextra -Wpedantic -fdata-sections -ffunction-sections -O0 -g3 -mcpu=cortex-m7 -mfpu=fpv5-d16 -mfloat-abi=hard  -Wall -Wextra -Wpedantic -fdata-sections -ffunction-sections -O0 -g3 -g -std=gnu11
+  INCLUDES = -ID:/STM32OBJ/test_1/debug_gpio/cmake/stm32cubemx/../../Core/Inc -ID:/STM32OBJ/test_1/debug_gpio/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc -ID:/STM32OBJ/test_1/debug_gpio/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/Legacy -ID:/STM32OBJ/test_1/debug_gpio/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include -ID:/STM32OBJ/test_1/debug_gpio/cmake/stm32cubemx/../../Drivers/CMSIS/Include
+  OBJECT_DIR = CMakeFiles\debug_gpio.dir
+  OBJECT_FILE_DIR = CMakeFiles\debug_gpio.dir\Drivers\STM32H7xx_HAL_Driver\Src
+
+build CMakeFiles/debug_gpio.dir/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_uart.c.obj: C_COMPILER__debug_gpio_unscanned_Debug D$:/STM32OBJ/test_1/debug_gpio/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_uart.c || cmake_object_order_depends_target_debug_gpio
+  DEFINES = -DDEBUG -DSTM32H750xx -DUSE_HAL_DRIVER -DUSE_PWR_LDO_SUPPLY
+  DEP_FILE = CMakeFiles\debug_gpio.dir\Drivers\STM32H7xx_HAL_Driver\Src\stm32h7xx_hal_uart.c.obj.d
+  FLAGS = -mcpu=cortex-m7 -mfpu=fpv5-d16 -mfloat-abi=hard  -Wall -Wextra -Wpedantic -fdata-sections -ffunction-sections -O0 -g3 -mcpu=cortex-m7 -mfpu=fpv5-d16 -mfloat-abi=hard  -Wall -Wextra -Wpedantic -fdata-sections -ffunction-sections -O0 -g3 -g -std=gnu11
+  INCLUDES = -ID:/STM32OBJ/test_1/debug_gpio/cmake/stm32cubemx/../../Core/Inc -ID:/STM32OBJ/test_1/debug_gpio/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc -ID:/STM32OBJ/test_1/debug_gpio/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/Legacy -ID:/STM32OBJ/test_1/debug_gpio/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include -ID:/STM32OBJ/test_1/debug_gpio/cmake/stm32cubemx/../../Drivers/CMSIS/Include
+  OBJECT_DIR = CMakeFiles\debug_gpio.dir
+  OBJECT_FILE_DIR = CMakeFiles\debug_gpio.dir\Drivers\STM32H7xx_HAL_Driver\Src
+
+build CMakeFiles/debug_gpio.dir/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_uart_ex.c.obj: C_COMPILER__debug_gpio_unscanned_Debug D$:/STM32OBJ/test_1/debug_gpio/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_uart_ex.c || cmake_object_order_depends_target_debug_gpio
+  DEFINES = -DDEBUG -DSTM32H750xx -DUSE_HAL_DRIVER -DUSE_PWR_LDO_SUPPLY
+  DEP_FILE = CMakeFiles\debug_gpio.dir\Drivers\STM32H7xx_HAL_Driver\Src\stm32h7xx_hal_uart_ex.c.obj.d
   FLAGS = -mcpu=cortex-m7 -mfpu=fpv5-d16 -mfloat-abi=hard  -Wall -Wextra -Wpedantic -fdata-sections -ffunction-sections -O0 -g3 -mcpu=cortex-m7 -mfpu=fpv5-d16 -mfloat-abi=hard  -Wall -Wextra -Wpedantic -fdata-sections -ffunction-sections -O0 -g3 -g -std=gnu11
   INCLUDES = -ID:/STM32OBJ/test_1/debug_gpio/cmake/stm32cubemx/../../Core/Inc -ID:/STM32OBJ/test_1/debug_gpio/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc -ID:/STM32OBJ/test_1/debug_gpio/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/Legacy -ID:/STM32OBJ/test_1/debug_gpio/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include -ID:/STM32OBJ/test_1/debug_gpio/cmake/stm32cubemx/../../Drivers/CMSIS/Include
   OBJECT_DIR = CMakeFiles\debug_gpio.dir
@@ -241,7 +273,7 @@ build CMakeFiles/debug_gpio.dir/startup_stm32h750xx.s.obj: ASM_COMPILER__debug_g
 #############################################
 # Link the executable debug_gpio.elf
 
-build debug_gpio.elf: C_EXECUTABLE_LINKER__debug_gpio_Debug CMakeFiles/debug_gpio.dir/Core/Src/main.c.obj CMakeFiles/debug_gpio.dir/Core/Src/stm32h7xx_it.c.obj CMakeFiles/debug_gpio.dir/Core/Src/stm32h7xx_hal_msp.c.obj CMakeFiles/debug_gpio.dir/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_cortex.c.obj CMakeFiles/debug_gpio.dir/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_rcc.c.obj CMakeFiles/debug_gpio.dir/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_rcc_ex.c.obj CMakeFiles/debug_gpio.dir/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_flash.c.obj CMakeFiles/debug_gpio.dir/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_flash_ex.c.obj CMakeFiles/debug_gpio.dir/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_gpio.c.obj CMakeFiles/debug_gpio.dir/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_hsem.c.obj CMakeFiles/debug_gpio.dir/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_dma.c.obj CMakeFiles/debug_gpio.dir/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_dma_ex.c.obj CMakeFiles/debug_gpio.dir/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_mdma.c.obj CMakeFiles/debug_gpio.dir/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_pwr.c.obj CMakeFiles/debug_gpio.dir/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_pwr_ex.c.obj CMakeFiles/debug_gpio.dir/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal.c.obj CMakeFiles/debug_gpio.dir/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_i2c.c.obj CMakeFiles/debug_gpio.dir/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_i2c_ex.c.obj CMakeFiles/debug_gpio.dir/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_exti.c.obj CMakeFiles/debug_gpio.dir/Core/Src/system_stm32h7xx.c.obj CMakeFiles/debug_gpio.dir/Core/Src/sysmem.c.obj CMakeFiles/debug_gpio.dir/Core/Src/syscalls.c.obj CMakeFiles/debug_gpio.dir/startup_stm32h750xx.s.obj
+build debug_gpio.elf: C_EXECUTABLE_LINKER__debug_gpio_Debug CMakeFiles/debug_gpio.dir/Core/Src/main.c.obj CMakeFiles/debug_gpio.dir/Core/Src/stm32h7xx_it.c.obj CMakeFiles/debug_gpio.dir/Core/Src/stm32h7xx_hal_msp.c.obj CMakeFiles/debug_gpio.dir/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_cortex.c.obj CMakeFiles/debug_gpio.dir/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_i2c.c.obj CMakeFiles/debug_gpio.dir/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_i2c_ex.c.obj CMakeFiles/debug_gpio.dir/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_rcc.c.obj CMakeFiles/debug_gpio.dir/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_rcc_ex.c.obj CMakeFiles/debug_gpio.dir/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_flash.c.obj CMakeFiles/debug_gpio.dir/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_flash_ex.c.obj CMakeFiles/debug_gpio.dir/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_gpio.c.obj CMakeFiles/debug_gpio.dir/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_hsem.c.obj CMakeFiles/debug_gpio.dir/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_dma.c.obj CMakeFiles/debug_gpio.dir/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_dma_ex.c.obj CMakeFiles/debug_gpio.dir/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_mdma.c.obj CMakeFiles/debug_gpio.dir/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_pwr.c.obj CMakeFiles/debug_gpio.dir/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_pwr_ex.c.obj CMakeFiles/debug_gpio.dir/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal.c.obj CMakeFiles/debug_gpio.dir/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_exti.c.obj CMakeFiles/debug_gpio.dir/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_spi.c.obj CMakeFiles/debug_gpio.dir/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_spi_ex.c.obj CMakeFiles/debug_gpio.dir/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_uart.c.obj CMakeFiles/debug_gpio.dir/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_uart_ex.c.obj CMakeFiles/debug_gpio.dir/Core/Src/system_stm32h7xx.c.obj CMakeFiles/debug_gpio.dir/Core/Src/sysmem.c.obj CMakeFiles/debug_gpio.dir/Core/Src/syscalls.c.obj CMakeFiles/debug_gpio.dir/startup_stm32h750xx.s.obj
   FLAGS = -mcpu=cortex-m7 -mfpu=fpv5-d16 -mfloat-abi=hard  -Wall -Wextra -Wpedantic -fdata-sections -ffunction-sections -O0 -g3 -mcpu=cortex-m7 -mfpu=fpv5-d16 -mfloat-abi=hard  -Wall -Wextra -Wpedantic -fdata-sections -ffunction-sections -O0 -g3 -g
   OBJECT_DIR = CMakeFiles\debug_gpio.dir
   POST_BUILD = cd .
