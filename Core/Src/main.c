@@ -56,6 +56,9 @@ SPI_HandleTypeDef hspi1;
 UART_HandleTypeDef huart4;
 
 /* USER CODE BEGIN PV */
+/* 添加静态变量用于计算平均值 */
+static uint32_t sample_count = 0;
+static float voltage_sum = 0;
 
 /* USER CODE END PV */
 
@@ -556,26 +559,33 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
     if(Is_ADC_Data_Valid(adc_value))
     {
       float voltage = Convert_ADC_To_Voltage(adc_value);    
-      /* 将浮点数分解为整数部分和小数部分 */
-      int32_t int_part = (int32_t)voltage;
-      int32_t decimal_part = (int32_t)((voltage - int_part) * 1000000); // 保留6位小数
-      if(decimal_part < 0) decimal_part = -decimal_part; // 确保小数部分为正
+      
+      /* 累加电压值并增加计数 */
+      voltage_sum += voltage;
+      sample_count++;
 
-      /* 使用UART发送ADC和电压值 */
-      char uart_buffer[64];
-      sprintf(uart_buffer, "ADC Voltage: %ld.%06ld V\r\n", 
-               int_part, decimal_part);
+      /* 每1000次采样计算一次平均值 */
+      if(sample_count >= 1000)
+      {
+        float avg_voltage = voltage_sum / sample_count;
+        
+        /* 将平均电压值分解为整数部分和小数部分 */
+        int32_t int_part = (int32_t)avg_voltage;
+        int32_t decimal_part = (int32_t)((avg_voltage - int_part) * 1000000); // 保留6位小数
+        if(decimal_part < 0) decimal_part = -decimal_part;
 
+        /* 使用UART发送平均电压值 */
+        char uart_buffer[64];
+        sprintf(uart_buffer, "Average Voltage (%lu samples): %ld.%06ld V\r\n", 
+                sample_count, int_part, decimal_part);
+        UART_SendChar(uart_buffer);
 
-              //       sprintf(uart_buffer, "ADC Raw: 0x%06lX (%ld), Voltage: %ld.%06ld V\r\n", 
-              // adc_value, (int32_t)adc_value, int_part, decimal_part);
-      UART_SendChar(uart_buffer);
-
+        /* 重置计数器和累加器 */
+        voltage_sum = 0;
+        sample_count = 0;
+      }
     }
-    else
-    {
-        UART_SendChar("Invalid ADC data.\r\n");
-    }
+   
 
   }
 }
