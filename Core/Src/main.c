@@ -94,18 +94,28 @@ static float Convert_ADC_To_Voltage(uint32_t adc_value)
 {
     int32_t signed_value;
     float voltage;
+    uint32_t temp = 0;
     
     // 如果是负数（最高位为1）
     if(adc_value & 0x800000) {
-        signed_value = (int32_t)(adc_value | 0xFF000000);
+      // temp = adc_value &0x7FFFFF; // 取23位有效值
+      // signed_value = (temp) * -1.0f;
+        signed_value = (int32_t)(adc_value| 0xFF000000);
+      // char str[50];
+      // sprintf(str, "D:0x%X - 0x%X - 0x%X\r\n", adc_value, temp, signed_value);
+      // UART_SendChar(str);
+      // UART_SendChar("---fff----\r\n");
+
+      
     } else {
         signed_value = (int32_t)adc_value;
     }
     
     // 将补码转换为电压值
     voltage = ((float)signed_value * VREF) / ADC_FSR;
-    
+
     return voltage;
+
 }
 
 
@@ -210,8 +220,8 @@ int main(void)
     SPI_Transmit(0x43);  // WREG命令，写寄存器3
     SPI_Transmit(0x00);  // 配置数据 - 寄存器0：PGA=1, AIN0/AIN1
     SPI_Transmit(0xD4);  // 配置数据 - 寄存器1：DR=20SPS, 连续转换模式
-    SPI_Transmit(0x10);  // 配置数据 - 寄存器2：IDAC关闭
-    SPI_Transmit(0x00);  // 配置数据 - 寄存器3：默认设置
+    SPI_Transmit(0x17);  // 配置数据 - 寄存器2：IDAC关闭
+    SPI_Transmit(0xA0);  // 配置数据 - 寄存器3：默认设置
   HAL_Delay(1);
 
     SPI_Transmit(0x23);
@@ -554,37 +564,36 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
     uint8_t mid = SPI_TransmitReceive(0xFF);  // 读取中8位
     uint8_t lsb = SPI_TransmitReceive(0xFF);  // 读取低8位
     adc_value = (uint32_t)msb << 16 | (uint32_t)mid << 8 | lsb;
+
+
+
     SPI_CS1_HIGH();
 
-    if(Is_ADC_Data_Valid(adc_value))
-    {
-      float voltage = Convert_ADC_To_Voltage(adc_value);    
-      
+
+    // if(Is_ADC_Data_Valid(adc_value))
+    // {
+      float voltage = Convert_ADC_To_Voltage(adc_value);  
+      float current =  voltage * 4000+  0.296;
+
+
+
+
       /* 累加电压值并增加计数 */
-      voltage_sum += voltage;
+      voltage_sum += current;
       sample_count++;
 
       /* 每1000次采样计算一次平均值 */
       if(sample_count >= 1000)
       {
         float avg_voltage = voltage_sum / sample_count;
-        
-        /* 将平均电压值分解为整数部分和小数部分 */
-        int32_t int_part = (int32_t)avg_voltage;
-        int32_t decimal_part = (int32_t)((avg_voltage - int_part) * 1000000); // 保留6位小数
-        if(decimal_part < 0) decimal_part = -decimal_part;
-
-        /* 使用UART发送平均电压值 */
-        char uart_buffer[64];
-        sprintf(uart_buffer, "Average Voltage (%lu samples): %ld.%06ld V\r\n", 
-                sample_count, int_part, decimal_part);
-        UART_SendChar(uart_buffer);
-
+      char buffer1[50];
+      sprintf(buffer1, "current :%.6f  V\r\n", avg_voltage); // 格式化为两位小数
+      UART_SendChar(buffer1); // 发送到串口
         /* 重置计数器和累加器 */
         voltage_sum = 0;
         sample_count = 0;
       }
-    }
+    
    
 
   }

@@ -35,7 +35,7 @@ rule C_COMPILER__debug_gpio_unscanned_Debug
 # Rule for linking C executable.
 
 rule C_EXECUTABLE_LINKER__debug_gpio_Debug
-  command = C:\Windows\system32\cmd.exe /C "$PRE_LINK && D:\tool\cmake\cmake_zip\arm-gnu-toolchain\bin\arm-none-eabi-gcc.exe $FLAGS -mcpu=cortex-m7 -mfpu=fpv5-d16 -mfloat-abi=hard  -T "D:/STM32OBJ/test_1/debug_gpio/stm32h750vbtx_flash.ld" --specs=nano.specs -Wl,-Map=debug_gpio.map -Wl,--gc-sections -Wl,--start-group -lc -lm -Wl,--end-group -Wl,--print-memory-usage $LINK_FLAGS $in -o $TARGET_FILE $LINK_PATH $LINK_LIBRARIES && $POST_BUILD"
+  command = C:\Windows\system32\cmd.exe /C "$PRE_LINK && D:\tool\cmake\cmake_zip\arm-gnu-toolchain\bin\arm-none-eabi-gcc.exe $FLAGS -mcpu=cortex-m7 -mfpu=fpv5-d16 -mfloat-abi=hard  -T "D:/STM32OBJ/test_1/debug_gpio/stm32h750vbtx_flash.ld" -Wl,-Map=debug_gpio.map -Wl,--gc-sections -Wl,--start-group -lc -lm -Wl,--end-group -Wl,--print-memory-usage $LINK_FLAGS $in -o $TARGET_FILE $LINK_PATH $LINK_LIBRARIES && $POST_BUILD"
   description = Linking C executable $TARGET_FILE
   restat = $RESTAT
 
