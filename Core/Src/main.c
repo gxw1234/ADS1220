@@ -60,6 +60,12 @@ UART_HandleTypeDef huart4;
 static uint32_t sample_count = 0;
 static float voltage_sum = 0;
 
+static uint32_t sample_count_2 = 0;
+static float voltage_sum_2 = 0;
+
+static float voltage_sum_3 = 0;
+
+
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -234,6 +240,41 @@ int main(void)
 
   HAL_Delay(1); 
     UART_SendChar("--------System Start!\r\n");
+
+
+
+    SPI_CS2_LOW();
+      /* 发送复位命令 */
+    SPI_Transmit(0x06);  // RESET命令
+
+    HAL_Delay(1); 
+
+
+    SPI_Transmit(0x43);  // WREG命令，写寄存器3
+    SPI_Transmit(0x00);  // 配置数据 - 寄存器0：PGA=1, AIN0/AIN1
+    SPI_Transmit(0xD4);  // 配置数据 - 寄存器1：DR=20SPS, 连续转换模式
+    SPI_Transmit(0x17);  // 配置数据 - 寄存器2：IDAC关闭
+    SPI_Transmit(0xA0);  // 配置数据 - 寄存器3：默认设置
+   HAL_Delay(1);
+
+    SPI_Transmit(0x23);
+    HAL_Delay(1);
+
+    SPI_Transmit(0x08);  
+    HAL_Delay(1);
+
+  SPI_CS2_HIGH();
+
+  HAL_Delay(1); 
+
+
+
+
+
+
+
+
+
 
     MX_GPIO_Init();
 
@@ -543,6 +584,20 @@ static void MX_GPIO_Init(void)
 
 
 
+  /*Configure GPIO pin : PD4 */
+  GPIO_InitStruct.Pin = GPIO_PIN_3;
+  GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING;
+  GPIO_InitStruct.Pull = GPIO_PULLUP;
+  HAL_GPIO_Init(GPIOD, &GPIO_InitStruct);
+
+  /* EXTI interrupt init*/
+  HAL_NVIC_SetPriority(EXTI3_IRQn, 1, 0);
+  HAL_NVIC_EnableIRQ(EXTI3_IRQn);
+
+
+
+
+
 /* USER CODE BEGIN MX_GPIO_Init_2 */
 /* USER CODE END MX_GPIO_Init_2 */
 }
@@ -558,16 +613,15 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 {
   if(GPIO_Pin == GPIO_PIN_4)
  {
+
+
     SPI_CS1_LOW();
     uint32_t adc_value = 0;
     uint8_t msb = SPI_TransmitReceive(0xFF);  // 读取高8位
     uint8_t mid = SPI_TransmitReceive(0xFF);  // 读取中8位
     uint8_t lsb = SPI_TransmitReceive(0xFF);  // 读取低8位
-    adc_value = (uint32_t)msb << 16 | (uint32_t)mid << 8 | lsb;
-
-
-
     SPI_CS1_HIGH();
+    adc_value = (uint32_t)msb << 16 | (uint32_t)mid << 8 | lsb;
 
 
     // if(Is_ADC_Data_Valid(adc_value))
@@ -597,6 +651,53 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
    
 
   }
+  else if(GPIO_Pin == GPIO_PIN_3)
+  {
+
+
+      
+    SPI_CS2_LOW();
+    uint32_t adc_value = 0;
+    uint8_t msb = SPI_TransmitReceive(0xFF);  // 读取高8位
+    uint8_t mid = SPI_TransmitReceive(0xFF);  // 读取中8位
+    uint8_t lsb = SPI_TransmitReceive(0xFF);  // 读取低8位
+    SPI_CS2_HIGH();
+    adc_value = (uint32_t)msb << 16 | (uint32_t)mid << 8 | lsb;
+
+
+    // if(Is_ADC_Data_Valid(adc_value))
+    // {
+      float voltage = Convert_ADC_To_Voltage(adc_value);  
+      float current =  (voltage * 797 )*3+  0.202;
+
+      /* 累加电压值并增加计数 */
+      voltage_sum_2 += current;
+
+      voltage_sum_3 += voltage;
+      sample_count_2++;
+
+      /* 每1000次采样计算一次平均值 */
+      if(sample_count_2 >= 1000)
+      {
+        float avg_voltage = voltage_sum_2 / sample_count_2;
+        float avg_voltage_3 = voltage_sum_3 / sample_count_2;
+      char buffer1[50];
+      sprintf(buffer1, "current_2 :%.6f voltage_sum  %.6f  V\r\n", avg_voltage ,avg_voltage_3); // 格式化为两位小数
+      UART_SendChar(buffer1); // 发送到串口
+        /* 重置计数器和累加器 */
+        voltage_sum_2 = 0;
+        sample_count_2 = 0;
+        voltage_sum_3 =0;
+      }
+    
+
+
+
+  }
+
+
+
+
 }
 /* USER CODE END 4 */
 
