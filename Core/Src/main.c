@@ -611,8 +611,9 @@ void UART_SendChar(const char* str)
 
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 {
-  if(GPIO_Pin == GPIO_PIN_4)
+  if(GPIO_Pin == GPIO_PIN_6)
  {
+  // UART_SendChar("1");
 
 
     SPI_CS1_LOW();
@@ -637,22 +638,20 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
       sample_count++;
 
       /* 每1000次采样计算一次平均值 */
-      if(sample_count >= 1000)
+      if(sample_count >= 1)
       {
         float avg_voltage = voltage_sum / sample_count;
       char buffer1[50];
-      sprintf(buffer1, "current :%.6f  V\r\n", avg_voltage); // 格式化为两位小数
+      sprintf(buffer1, "current_uA :%.6f  uA\r\n", current); // 格式化为两位小数
       UART_SendChar(buffer1); // 发送到串口
         /* 重置计数器和累加器 */
         voltage_sum = 0;
         sample_count = 0;
       }
-    
-   
-
   }
   else if(GPIO_Pin == GPIO_PIN_3)
   {
+      // UART_SendChar("2");
 
 
       
@@ -670,25 +669,37 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
       float voltage = Convert_ADC_To_Voltage(adc_value);  
       float current =  (voltage * 797 )*3+  0.202;
 
-      /* 累加电压值并增加计数 */
-      voltage_sum_2 += current;
+      
 
-      voltage_sum_3 += voltage;
-      sample_count_2++;
-
-      /* 每1000次采样计算一次平均值 */
-      if(sample_count_2 >= 1000)
+      if(current >0.1)
       {
-        float avg_voltage = voltage_sum_2 / sample_count_2;
-        float avg_voltage_3 = voltage_sum_3 / sample_count_2;
       char buffer1[50];
-      sprintf(buffer1, "current_2 :%.6f voltage_sum  %.6f  V\r\n", avg_voltage ,avg_voltage_3); // 格式化为两位小数
+      sprintf(buffer1, "current_mA :%.6f voltage_sum  %.6f  mA\r\n", current ,voltage); // 格式化为两位小数
       UART_SendChar(buffer1); // 发送到串口
-        /* 重置计数器和累加器 */
-        voltage_sum_2 = 0;
-        sample_count_2 = 0;
-        voltage_sum_3 =0;
+
       }
+
+      // /* 累加电压值并增加计数 */
+      // voltage_sum_2 += current;
+
+      // voltage_sum_3 += voltage;
+      // sample_count_2++;
+
+      // /* 每1000次采样计算一次平均值 */
+      // if(sample_count_2 >= 1)
+      // {
+      //   float avg_voltage = voltage_sum_2 / sample_count_2;
+      //   float avg_voltage_3 = voltage_sum_3 / sample_count_2;
+
+      //   if(avg_voltage > avg_voltage_3)
+      // char buffer1[50];
+      // sprintf(buffer1, "current_mA :%.6f voltage_sum  %.6f  mA\r\n", current ,voltage); // 格式化为两位小数
+      // UART_SendChar(buffer1); // 发送到串口
+      //   /* 重置计数器和累加器 */
+      //   voltage_sum_2 = 0;
+      //   sample_count_2 = 0;
+      //   voltage_sum_3 =0;
+      // }
     
 
 
