@@ -164,40 +164,40 @@ void HAL_SPI_MspInit(SPI_HandleTypeDef* hspi)
 {
   GPIO_InitTypeDef GPIO_InitStruct = {0};
   RCC_PeriphCLKInitTypeDef PeriphClkInitStruct = {0};
-  if(hspi->Instance==SPI1)
+  if(hspi->Instance==SPI4)
   {
-  /* USER CODE BEGIN SPI1_MspInit 0 */
+  /* USER CODE BEGIN SPI4_MspInit 0 */
 
-  /* USER CODE END SPI1_MspInit 0 */
+  /* USER CODE END SPI4_MspInit 0 */
 
   /** Initializes the peripherals clock
   */
-    PeriphClkInitStruct.PeriphClockSelection = RCC_PERIPHCLK_SPI1;
-    PeriphClkInitStruct.Spi123ClockSelection = RCC_SPI123CLKSOURCE_PLL;
+    PeriphClkInitStruct.PeriphClockSelection = RCC_PERIPHCLK_SPI4;
+    PeriphClkInitStruct.Spi45ClockSelection = RCC_SPI45CLKSOURCE_D2PCLK1;
     if (HAL_RCCEx_PeriphCLKConfig(&PeriphClkInitStruct) != HAL_OK)
     {
       Error_Handler();
     }
 
     /* Peripheral clock enable */
-    __HAL_RCC_SPI1_CLK_ENABLE();
+    __HAL_RCC_SPI4_CLK_ENABLE();
 
-    __HAL_RCC_GPIOA_CLK_ENABLE();
-    /**SPI1 GPIO Configuration
-    PA5     ------> SPI1_SCK
-    PA6     ------> SPI1_MISO
-    PA7     ------> SPI1_MOSI
+    __HAL_RCC_GPIOE_CLK_ENABLE();
+    /**SPI4 GPIO Configuration
+    PE12     ------> SPI4_SCK
+    PE13     ------> SPI4_MISO
+    PE14     ------> SPI4_MOSI
     */
-    GPIO_InitStruct.Pin = GPIO_PIN_5|GPIO_PIN_6|GPIO_PIN_7;
+    GPIO_InitStruct.Pin = GPIO_PIN_12|GPIO_PIN_13|GPIO_PIN_14;
     GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
     GPIO_InitStruct.Pull = GPIO_NOPULL;
     GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-    GPIO_InitStruct.Alternate = GPIO_AF5_SPI1;
-    HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+    GPIO_InitStruct.Alternate = GPIO_AF5_SPI4;
+    HAL_GPIO_Init(GPIOE, &GPIO_InitStruct);
 
-  /* USER CODE BEGIN SPI1_MspInit 1 */
+  /* USER CODE BEGIN SPI4_MspInit 1 */
 
-  /* USER CODE END SPI1_MspInit 1 */
+  /* USER CODE END SPI4_MspInit 1 */
 
   }
 
@@ -211,24 +211,24 @@ void HAL_SPI_MspInit(SPI_HandleTypeDef* hspi)
 */
 void HAL_SPI_MspDeInit(SPI_HandleTypeDef* hspi)
 {
-  if(hspi->Instance==SPI1)
+  if(hspi->Instance==SPI4)
   {
-  /* USER CODE BEGIN SPI1_MspDeInit 0 */
+  /* USER CODE BEGIN SPI4_MspDeInit 0 */
 
-  /* USER CODE END SPI1_MspDeInit 0 */
+  /* USER CODE END SPI4_MspDeInit 0 */
     /* Peripheral clock disable */
-    __HAL_RCC_SPI1_CLK_DISABLE();
+    __HAL_RCC_SPI4_CLK_DISABLE();
 
-    /**SPI1 GPIO Configuration
-    PA5     ------> SPI1_SCK
-    PA6     ------> SPI1_MISO
-    PA7     ------> SPI1_MOSI
+    /**SPI4 GPIO Configuration
+    PE12     ------> SPI4_SCK
+    PE13     ------> SPI4_MISO
+    PE14     ------> SPI4_MOSI
     */
-    HAL_GPIO_DeInit(GPIOA, GPIO_PIN_5|GPIO_PIN_6|GPIO_PIN_7);
+    HAL_GPIO_DeInit(GPIOE, GPIO_PIN_12|GPIO_PIN_13|GPIO_PIN_14);
 
-  /* USER CODE BEGIN SPI1_MspDeInit 1 */
+  /* USER CODE BEGIN SPI4_MspDeInit 1 */
 
-  /* USER CODE END SPI1_MspDeInit 1 */
+  /* USER CODE END SPI4_MspDeInit 1 */
   }
 
 }
@@ -243,39 +243,39 @@ void HAL_UART_MspInit(UART_HandleTypeDef* huart)
 {
   GPIO_InitTypeDef GPIO_InitStruct = {0};
   RCC_PeriphCLKInitTypeDef PeriphClkInitStruct = {0};
-  if(huart->Instance==UART4)
+  if(huart->Instance==USART1)
   {
-  /* USER CODE BEGIN UART4_MspInit 0 */
+  /* USER CODE BEGIN USART1_MspInit 0 */
 
-  /* USER CODE END UART4_MspInit 0 */
+  /* USER CODE END USART1_MspInit 0 */
 
   /** Initializes the peripherals clock
   */
-    PeriphClkInitStruct.PeriphClockSelection = RCC_PERIPHCLK_UART4;
-    PeriphClkInitStruct.Usart234578ClockSelection = RCC_USART234578CLKSOURCE_D2PCLK1;
+    PeriphClkInitStruct.PeriphClockSelection = RCC_PERIPHCLK_USART1;
+    PeriphClkInitStruct.Usart16ClockSelection = RCC_USART16CLKSOURCE_D2PCLK2;
     if (HAL_RCCEx_PeriphCLKConfig(&PeriphClkInitStruct) != HAL_OK)
     {
       Error_Handler();
     }
 
     /* Peripheral clock enable */
-    __HAL_RCC_UART4_CLK_ENABLE();
+    __HAL_RCC_USART1_CLK_ENABLE();
 
     __HAL_RCC_GPIOA_CLK_ENABLE();
-    /**UART4 GPIO Configuration
-    PA0     ------> UART4_TX
-    PA1     ------> UART4_RX
+    /**USART1 GPIO Configuration
+    PA9     ------> USART1_TX
+    PA10    ------> USART1_RX
     */
-    GPIO_InitStruct.Pin = GPIO_PIN_0|GPIO_PIN_1;
+    GPIO_InitStruct.Pin = GPIO_PIN_9|GPIO_PIN_10;
     GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
     GPIO_InitStruct.Pull = GPIO_NOPULL;
     GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-    GPIO_InitStruct.Alternate = GPIO_AF8_UART4;
+    GPIO_InitStruct.Alternate = GPIO_AF7_USART1;
     HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
-  /* USER CODE BEGIN UART4_MspInit 1 */
+  /* USER CODE BEGIN USART1_MspInit 1 */
 
-  /* USER CODE END UART4_MspInit 1 */
+  /* USER CODE END USART1_MspInit 1 */
 
   }
 
@@ -289,23 +289,23 @@ void HAL_UART_MspInit(UART_HandleTypeDef* huart)
 */
 void HAL_UART_MspDeInit(UART_HandleTypeDef* huart)
 {
-  if(huart->Instance==UART4)
+  if(huart->Instance==USART1)
   {
-  /* USER CODE BEGIN UART4_MspDeInit 0 */
+  /* USER CODE BEGIN USART1_MspDeInit 0 */
 
-  /* USER CODE END UART4_MspDeInit 0 */
+  /* USER CODE END USART1_MspDeInit 0 */
     /* Peripheral clock disable */
-    __HAL_RCC_UART4_CLK_DISABLE();
+    __HAL_RCC_USART1_CLK_DISABLE();
 
-    /**UART4 GPIO Configuration
-    PA0     ------> UART4_TX
-    PA1     ------> UART4_RX
+    /**USART1 GPIO Configuration
+    PA9     ------> USART1_TX
+    PA10    ------> USART1_RX
     */
-    HAL_GPIO_DeInit(GPIOA, GPIO_PIN_0|GPIO_PIN_1);
+    HAL_GPIO_DeInit(GPIOA, GPIO_PIN_9|GPIO_PIN_10);
 
-  /* USER CODE BEGIN UART4_MspDeInit 1 */
+  /* USER CODE BEGIN USART1_MspDeInit 1 */
 
-  /* USER CODE END UART4_MspDeInit 1 */
+  /* USER CODE END USART1_MspDeInit 1 */
   }
 
 }

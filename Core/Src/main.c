@@ -34,12 +34,12 @@
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
 /* CS1引脚控制宏定义 */
-#define SPI_CS1_LOW()       HAL_GPIO_WritePin(GPIOB, GPIO_PIN_4, GPIO_PIN_RESET)
-#define SPI_CS1_HIGH()      HAL_GPIO_WritePin(GPIOB, GPIO_PIN_4, GPIO_PIN_SET)
+#define SPI_CS1_LOW()       HAL_GPIO_WritePin(GPIOE, GPIO_PIN_11, GPIO_PIN_RESET)
+#define SPI_CS1_HIGH()      HAL_GPIO_WritePin(GPIOE, GPIO_PIN_11, GPIO_PIN_SET)
 
 /* CS2引脚控制宏定义 */
-#define SPI_CS2_LOW()       HAL_GPIO_WritePin(GPIOB, GPIO_PIN_5, GPIO_PIN_RESET)
-#define SPI_CS2_HIGH()      HAL_GPIO_WritePin(GPIOB, GPIO_PIN_5, GPIO_PIN_SET)
+#define SPI_CS2_LOW()       HAL_GPIO_WritePin(GPIOE, GPIO_PIN_15, GPIO_PIN_RESET)
+#define SPI_CS2_HIGH()      HAL_GPIO_WritePin(GPIOE, GPIO_PIN_15, GPIO_PIN_SET)
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -51,14 +51,15 @@
 
 I2C_HandleTypeDef hi2c1;
 
-SPI_HandleTypeDef hspi1;
+SPI_HandleTypeDef hspi4;
 
-UART_HandleTypeDef huart4;
+UART_HandleTypeDef huart1;
 
 /* USER CODE BEGIN PV */
 /* 添加静态变量用于计算平均值 */
 static uint32_t sample_count = 0;
 static float voltage_sum = 0;
+static float raw_voltage_sum = 0; // 用于存储原始电压累加值
 
 static uint32_t sample_count_2 = 0;
 static float voltage_sum_2 = 0;
@@ -75,8 +76,8 @@ static float Convert_ADC_To_Voltage(uint32_t adc_value);
 static void MPU_Config(void);
 static void MX_GPIO_Init(void);
 static void MX_I2C1_Init(void);
-static void MX_SPI1_Init(void);
-static void MX_UART4_Init(void);
+static void MX_SPI4_Init(void);
+static void MX_USART1_Init(void);
 /* USER CODE BEGIN PFP */
 void UART_SendChar(const char* str);  // 串口发送函数声明
 
@@ -139,7 +140,7 @@ void SPI_Transmit(uint8_t data) {
     uint8_t rxData[1];          // 接收数据缓冲区
 
     /* 同时发送和接收数据 */
-    if(HAL_SPI_TransmitReceive(&hspi1, txData, rxData, sizeof(txData), 100) != HAL_OK)
+    if(HAL_SPI_TransmitReceive(&hspi4, txData, rxData, sizeof(txData), 100) != HAL_OK)
     {
         Error_Handler();
     }
@@ -156,7 +157,7 @@ static uint8_t SPI_TransmitReceive(uint8_t data) {
     uint8_t rxData[1];          // 接收数据缓冲区
 
     /* 同时发送和接收数据 */
-    if(HAL_SPI_TransmitReceive(&hspi1, txData, rxData, sizeof(txData), 100) != HAL_OK)
+    if(HAL_SPI_TransmitReceive(&hspi4, txData, rxData, sizeof(txData), 100) != HAL_OK)
     {
         Error_Handler();
     }
@@ -209,8 +210,8 @@ int main(void)
   /* Initialize all configured peripherals */
   // MX_GPIO_Init();
   MX_I2C1_Init();
-  MX_SPI1_Init();
-  MX_UART4_Init();
+  MX_SPI4_Init();
+  MX_USART1_Init();
   /* USER CODE BEGIN 2 */
   UART_SendChar("System Start!\r\n");
   HAL_Delay(1); 
@@ -228,17 +229,15 @@ int main(void)
     SPI_Transmit(0xD4);  // 配置数据 - 寄存器1：DR=20SPS, 连续转换模式
     SPI_Transmit(0x17);  // 配置数据 - 寄存器2：IDAC关闭
     SPI_Transmit(0xA0);  // 配置数据 - 寄存器3：默认设置
-  HAL_Delay(1);
-
+    HAL_Delay(1);
     SPI_Transmit(0x23);
-      HAL_Delay(1);
-
+    HAL_Delay(1);
     SPI_Transmit(0x08);  
     HAL_Delay(1);
 
-  SPI_CS1_HIGH();
+    SPI_CS1_HIGH();
 
-  HAL_Delay(1); 
+    HAL_Delay(1); 
     UART_SendChar("--------System Start!\r\n");
 
 
@@ -398,65 +397,65 @@ static void MX_I2C1_Init(void)
 }
 
 /**
-  * @brief SPI1 Initialization Function
+  * @brief SPI4 Initialization Function
   * @param None
   * @retval None
   */
-static void MX_SPI1_Init(void)
+static void MX_SPI4_Init(void)
 {
 
-  /* USER CODE BEGIN SPI1_Init 0 */
+  /* USER CODE BEGIN SPI4_Init 0 */
 
-  /* USER CODE END SPI1_Init 0 */
+  /* USER CODE END SPI4_Init 0 */
 
-  /* USER CODE BEGIN SPI1_Init 1 */
+  /* USER CODE BEGIN SPI4_Init 1 */
 
-  /* USER CODE END SPI1_Init 1 */
-  /* SPI1 parameter configuration*/
-  // hspi1.Instance = SPI1;
-  // hspi1.Init.Mode = SPI_MODE_MASTER;
-  // hspi1.Init.Direction = SPI_DIRECTION_2LINES;
-  // hspi1.Init.DataSize = SPI_DATASIZE_8BIT;
-  // hspi1.Init.CLKPolarity = SPI_POLARITY_LOW;
-  // hspi1.Init.CLKPhase = SPI_PHASE_2EDGE;
-  // hspi1.Init.NSS = SPI_NSS_SOFT;
-  // hspi1.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_2;
-  // hspi1.Init.FirstBit = SPI_FIRSTBIT_MSB;
-  // hspi1.Init.TIMode = SPI_TIMODE_DISABLE;
-  // hspi1.Init.CRCCalculation = SPI_CRCCALCULATION_DISABLE;
-  // hspi1.Init.CRCPolynomial = 0x0;
-  // hspi1.Init.NSSPMode = SPI_NSS_PULSE_ENABLE;
-  // hspi1.Init.NSSPolarity = SPI_NSS_POLARITY_LOW;
-  // hspi1.Init.FifoThreshold = SPI_FIFO_THRESHOLD_01DATA;
-  // hspi1.Init.TxCRCInitializationPattern = SPI_CRC_INITIALIZATION_ALL_ZERO_PATTERN;
-  // hspi1.Init.RxCRCInitializationPattern = SPI_CRC_INITIALIZATION_ALL_ZERO_PATTERN;
-  // hspi1.Init.MasterSSIdleness = SPI_MASTER_SS_IDLENESS_00CYCLE;
-  // hspi1.Init.MasterInterDataIdleness = SPI_MASTER_INTERDATA_IDLENESS_00CYCLE;
-  // hspi1.Init.MasterReceiverAutoSusp = SPI_MASTER_RX_AUTOSUSP_DISABLE;
-  // hspi1.Init.MasterKeepIOState = SPI_MASTER_KEEP_IO_STATE_DISABLE;
-  // hspi1.Init.IOSwap = SPI_IO_SWAP_DISABLE;
-
-
-    /* SPI1 参数配置 */
-    hspi1.Instance = SPI1;
-    hspi1.Init.Mode = SPI_MODE_MASTER;
-    hspi1.Init.Direction = SPI_DIRECTION_2LINES;
-    hspi1.Init.DataSize = SPI_DATASIZE_8BIT;
-    hspi1.Init.CLKPolarity = SPI_POLARITY_LOW;    // CPOL = 0
-    hspi1.Init.CLKPhase = SPI_PHASE_2EDGE;        // CPHA = 1
-    hspi1.Init.NSS = SPI_NSS_SOFT;
-    hspi1.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_32;  // 确保SCLK周期>150ns
-    hspi1.Init.FirstBit = SPI_FIRSTBIT_MSB;
-    hspi1.Init.TIMode = SPI_TIMODE_DISABLE;
-    hspi1.Init.CRCCalculation = SPI_CRCCALCULATION_DISABLE;
-    hspi1.Init.CRCPolynomial = 7;
-    hspi1.Init.NSSPMode = SPI_NSS_PULSE_DISABLE;
-    hspi1.Init.FifoThreshold = SPI_FIFO_THRESHOLD_01DATA;
-    hspi1.Init.MasterKeepIOState = SPI_MASTER_KEEP_IO_STATE_ENABLE;
+  /* USER CODE END SPI4_Init 1 */
+  /* SPI4 parameter configuration*/
+  // hspi4.Instance = SPI4;
+  // hspi4.Init.Mode = SPI_MODE_MASTER;
+  // hspi4.Init.Direction = SPI_DIRECTION_2LINES;
+  // hspi4.Init.DataSize = SPI_DATASIZE_8BIT;
+  // hspi4.Init.CLKPolarity = SPI_POLARITY_LOW;
+  // hspi4.Init.CLKPhase = SPI_PHASE_2EDGE;
+  // hspi4.Init.NSS = SPI_NSS_SOFT;
+  // hspi4.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_2;
+  // hspi4.Init.FirstBit = SPI_FIRSTBIT_MSB;
+  // hspi4.Init.TIMode = SPI_TIMODE_DISABLE;
+  // hspi4.Init.CRCCalculation = SPI_CRCCALCULATION_DISABLE;
+  // hspi4.Init.CRCPolynomial = 0x0;
+  // hspi4.Init.NSSPMode = SPI_NSS_PULSE_ENABLE;
+  // hspi4.Init.NSSPolarity = SPI_NSS_POLARITY_LOW;
+  // hspi4.Init.FifoThreshold = SPI_FIFO_THRESHOLD_01DATA;
+  // hspi4.Init.TxCRCInitializationPattern = SPI_CRC_INITIALIZATION_ALL_ZERO_PATTERN;
+  // hspi4.Init.RxCRCInitializationPattern = SPI_CRC_INITIALIZATION_ALL_ZERO_PATTERN;
+  // hspi4.Init.MasterSSIdleness = SPI_MASTER_SS_IDLENESS_00CYCLE;
+  // hspi4.Init.MasterInterDataIdleness = SPI_MASTER_INTERDATA_IDLENESS_00CYCLE;
+  // hspi4.Init.MasterReceiverAutoSusp = SPI_MASTER_RX_AUTOSUSP_DISABLE;
+  // hspi4.Init.MasterKeepIOState = SPI_MASTER_KEEP_IO_STATE_DISABLE;
+  // hspi4.Init.IOSwap = SPI_IO_SWAP_DISABLE;
 
 
+    /* SPI4 参数配置 */
+    hspi4.Instance = SPI4;
+    hspi4.Init.Mode = SPI_MODE_MASTER;
+    hspi4.Init.Direction = SPI_DIRECTION_2LINES;
+    hspi4.Init.DataSize = SPI_DATASIZE_8BIT;
+    hspi4.Init.CLKPolarity = SPI_POLARITY_LOW;    // CPOL = 0
+    hspi4.Init.CLKPhase = SPI_PHASE_2EDGE;        // CPHA = 1
+    hspi4.Init.NSS = SPI_NSS_SOFT;
+    hspi4.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_32;  // 确保SCLK周期>150ns
+    hspi4.Init.FirstBit = SPI_FIRSTBIT_MSB;
+    hspi4.Init.TIMode = SPI_TIMODE_DISABLE;
+    hspi4.Init.CRCCalculation = SPI_CRCCALCULATION_DISABLE;
+    hspi4.Init.CRCPolynomial = 7;
+    hspi4.Init.NSSPMode = SPI_NSS_PULSE_DISABLE;
+    hspi4.Init.FifoThreshold = SPI_FIFO_THRESHOLD_01DATA;
+    hspi4.Init.MasterKeepIOState = SPI_MASTER_KEEP_IO_STATE_ENABLE;
 
-  if (HAL_SPI_Init(&hspi1) != HAL_OK)
+
+
+  if (HAL_SPI_Init(&hspi4) != HAL_OK)
   {
     Error_Handler();
   }
@@ -466,7 +465,7 @@ static void MX_SPI1_Init(void)
 
 
 
-  /* USER CODE BEGIN SPI1_Init 2 */
+  /* USER CODE BEGIN SPI4_Init 2 */
   /* CS引脚配置 */
   GPIO_InitTypeDef GPIO_InitStruct = {0};
   
@@ -475,71 +474,71 @@ static void MX_SPI1_Init(void)
 
 
   /* CS1引脚配置 */
-  GPIO_InitStruct.Pin = GPIO_PIN_4;
+  GPIO_InitStruct.Pin = GPIO_PIN_11;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_PULLUP;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
-  HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+  HAL_GPIO_Init(GPIOE, &GPIO_InitStruct);
   /* CS1默认高电平 */
-  HAL_GPIO_WritePin(GPIOB, GPIO_PIN_4, GPIO_PIN_SET);
+  HAL_GPIO_WritePin(GPIOE, GPIO_PIN_11, GPIO_PIN_SET);
   
   /* CS2引脚配置 */
-  GPIO_InitStruct.Pin = GPIO_PIN_5;
+  GPIO_InitStruct.Pin = GPIO_PIN_15;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_PULLUP;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
-  HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+  HAL_GPIO_Init(GPIOE, &GPIO_InitStruct);
   /* CS2默认高电平 */
-  HAL_GPIO_WritePin(GPIOB, GPIO_PIN_5, GPIO_PIN_SET);
+  HAL_GPIO_WritePin(GPIOE, GPIO_PIN_15, GPIO_PIN_SET);
 
-  /* USER CODE END SPI1_Init 2 */
+  /* USER CODE END SPI4_Init 2 */
 }
 
 /**
-  * @brief UART4 Initialization Function
+  * @brief USART1 Initialization Function
   * @param None
   * @retval None
   */
-static void MX_UART4_Init(void)
+static void MX_USART1_Init(void)
 {
 
-  /* USER CODE BEGIN UART4_Init 0 */
+  /* USER CODE BEGIN USART1_Init 0 */
 
-  /* USER CODE END UART4_Init 0 */
+  /* USER CODE END USART1_Init 0 */
 
-  /* USER CODE BEGIN UART4_Init 1 */
+  /* USER CODE BEGIN USART1_Init 1 */
 
-  /* USER CODE END UART4_Init 1 */
-  huart4.Instance = UART4;
-  huart4.Init.BaudRate = 115200;
-  huart4.Init.WordLength = UART_WORDLENGTH_8B;
-  huart4.Init.StopBits = UART_STOPBITS_1;
-  huart4.Init.Parity = UART_PARITY_NONE;
-  huart4.Init.Mode = UART_MODE_TX_RX;
-  huart4.Init.HwFlowCtl = UART_HWCONTROL_NONE;
-  huart4.Init.OverSampling = UART_OVERSAMPLING_16;
-  huart4.Init.OneBitSampling = UART_ONE_BIT_SAMPLE_DISABLE;
-  huart4.Init.ClockPrescaler = UART_PRESCALER_DIV1;
-  huart4.AdvancedInit.AdvFeatureInit = UART_ADVFEATURE_NO_INIT;
-  if (HAL_UART_Init(&huart4) != HAL_OK)
+  /* USER CODE END USART1_Init 1 */
+  huart1.Instance = USART1;
+  huart1.Init.BaudRate = 1500000;
+  huart1.Init.WordLength = UART_WORDLENGTH_8B;
+  huart1.Init.StopBits = UART_STOPBITS_1;
+  huart1.Init.Parity = UART_PARITY_NONE;
+  huart1.Init.Mode = UART_MODE_TX_RX;
+  huart1.Init.HwFlowCtl = UART_HWCONTROL_NONE;
+  huart1.Init.OverSampling = UART_OVERSAMPLING_16;
+  huart1.Init.OneBitSampling = UART_ONE_BIT_SAMPLE_DISABLE;
+  huart1.Init.ClockPrescaler = UART_PRESCALER_DIV1;
+  huart1.AdvancedInit.AdvFeatureInit = UART_ADVFEATURE_NO_INIT;
+  if (HAL_UART_Init(&huart1) != HAL_OK)
   {
     Error_Handler();
   }
-  if (HAL_UARTEx_SetTxFifoThreshold(&huart4, UART_TXFIFO_THRESHOLD_1_8) != HAL_OK)
+  if (HAL_UARTEx_SetTxFifoThreshold(&huart1, UART_TXFIFO_THRESHOLD_1_8) != HAL_OK)
   {
     Error_Handler();
   }
-  if (HAL_UARTEx_SetRxFifoThreshold(&huart4, UART_RXFIFO_THRESHOLD_1_8) != HAL_OK)
+  if (HAL_UARTEx_SetRxFifoThreshold(&huart1, UART_RXFIFO_THRESHOLD_1_8) != HAL_OK)
   {
     Error_Handler();
   }
-  if (HAL_UARTEx_EnableFifoMode(&huart4) != HAL_OK)  // 启用FIFO模式
+  if (HAL_UARTEx_EnableFifoMode(&huart1) != HAL_OK)  // 启用FIFO模式
   {
     Error_Handler();
   }
-  /* USER CODE BEGIN UART4_Init 2 */
+  /* USER CODE BEGIN USART1_Init 2 */
 
-  /* USER CODE END UART4_Init 2 */
+  /* USER CODE END USART1_Init 2 */
 
 }
 
@@ -572,27 +571,25 @@ static void MX_GPIO_Init(void)
   HAL_GPIO_Init(GPIOE, &GPIO_InitStruct);
 
 
-  /*Configure GPIO pin : PD4 */
-  GPIO_InitStruct.Pin = GPIO_PIN_4;
+  /*Configure GPIO pin : PH10 */
+  GPIO_InitStruct.Pin = GPIO_PIN_10;
   GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING;
   GPIO_InitStruct.Pull = GPIO_PULLUP;
-  HAL_GPIO_Init(GPIOD, &GPIO_InitStruct);
+  HAL_GPIO_Init(GPIOH, &GPIO_InitStruct);
 
-  /* EXTI interrupt init*/
-  HAL_NVIC_SetPriority(EXTI4_IRQn, 1, 0);
-  HAL_NVIC_EnableIRQ(EXTI4_IRQn);
-
-
-
-  /*Configure GPIO pin : PD4 */
-  GPIO_InitStruct.Pin = GPIO_PIN_3;
+  /*Configure GPIO pin : PH9 */
+  GPIO_InitStruct.Pin = GPIO_PIN_9;
   GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING;
   GPIO_InitStruct.Pull = GPIO_PULLUP;
-  HAL_GPIO_Init(GPIOD, &GPIO_InitStruct);
-
-  /* EXTI interrupt init*/
-  HAL_NVIC_SetPriority(EXTI3_IRQn, 1, 0);
-  HAL_NVIC_EnableIRQ(EXTI3_IRQn);
+  HAL_GPIO_Init(GPIOH, &GPIO_InitStruct);
+  
+  /* EXTI interrupt init for PH9 */
+  HAL_NVIC_SetPriority(EXTI9_5_IRQn, 1, 0);
+  HAL_NVIC_EnableIRQ(EXTI9_5_IRQn);
+  
+  /* EXTI interrupt init for PH10 */
+  HAL_NVIC_SetPriority(EXTI15_10_IRQn, 1, 0);
+  HAL_NVIC_EnableIRQ(EXTI15_10_IRQn);
 
 
 
@@ -606,55 +603,14 @@ static void MX_GPIO_Init(void)
 // 串口发送函数定义
 void UART_SendChar(const char* str)
 {
-    HAL_UART_Transmit(&huart4, (uint8_t*)str, strlen(str), 100);
+    HAL_UART_Transmit(&huart1, (uint8_t*)str, strlen(str), 100);
 }
 
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 {
-  if(GPIO_Pin == GPIO_PIN_6)
+  if(GPIO_Pin == GPIO_PIN_10)
  {
-  // UART_SendChar("1");
 
-
-    SPI_CS1_LOW();
-    uint32_t adc_value = 0;
-    uint8_t msb = SPI_TransmitReceive(0xFF);  // 读取高8位
-    uint8_t mid = SPI_TransmitReceive(0xFF);  // 读取中8位
-    uint8_t lsb = SPI_TransmitReceive(0xFF);  // 读取低8位
-    SPI_CS1_HIGH();
-    adc_value = (uint32_t)msb << 16 | (uint32_t)mid << 8 | lsb;
-
-
-    // if(Is_ADC_Data_Valid(adc_value))
-    // {
-      float voltage = Convert_ADC_To_Voltage(adc_value);  
-      float current =  voltage * 4000+  0.296;
-
-
-
-
-      /* 累加电压值并增加计数 */
-      voltage_sum += current;
-      sample_count++;
-
-      /* 每1000次采样计算一次平均值 */
-      if(sample_count >= 1)
-      {
-        float avg_voltage = voltage_sum / sample_count;
-      char buffer1[50];
-      sprintf(buffer1, "current_uA :%.6f  uA\r\n", current); // 格式化为两位小数
-      UART_SendChar(buffer1); // 发送到串口
-        /* 重置计数器和累加器 */
-        voltage_sum = 0;
-        sample_count = 0;
-      }
-  }
-  else if(GPIO_Pin == GPIO_PIN_3)
-  {
-      // UART_SendChar("2");
-
-
-      
     SPI_CS2_LOW();
     uint32_t adc_value = 0;
     uint8_t msb = SPI_TransmitReceive(0xFF);  // 读取高8位
@@ -667,46 +623,88 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
     // if(Is_ADC_Data_Valid(adc_value))
     // {
       float voltage = Convert_ADC_To_Voltage(adc_value);  
+      float current =  voltage * 4000+  0.296;
+      /* 累加电压值和电流值并增加计数 */
+      voltage_sum += current;
+      raw_voltage_sum += voltage; // 累加原始电压值
+      sample_count++;
+
+      /* 每1000次采样计算一次平均值 */
+      if(sample_count >= 1000)
+      {
+        float avg_current = voltage_sum / sample_count;
+        float avg_voltage = raw_voltage_sum / sample_count; // 计算平均电压值
+        char buffer1[80];
+        sprintf(buffer1, "current_uA:%.6f uA, avg_voltage:%.6f V\r\n", avg_current, avg_voltage);
+        UART_SendChar(buffer1); // 发送到串口
+        /* 重置计数器和累加器 */
+        voltage_sum = 0;
+        raw_voltage_sum = 0; // 重置原始电压累加值
+        sample_count = 0;
+      }
+    
+  }
+  else if(GPIO_Pin == GPIO_PIN_9)
+  {
+    // sample_count_2++;
+
+    // if(sample_count_2 >= 100)
+
+    // {
+    //   UART_SendChar("2");
+    //   sample_count_2 =0;
+    // }
+      
+
+
+      
+    SPI_CS1_LOW();
+    uint32_t adc_value = 0;
+    uint8_t msb = SPI_TransmitReceive(0xFF);  // 读取高8位
+    uint8_t mid = SPI_TransmitReceive(0xFF);  // 读取中8位
+    uint8_t lsb = SPI_TransmitReceive(0xFF);  // 读取低8位
+    SPI_CS1_HIGH();
+    adc_value = (uint32_t)msb << 16 | (uint32_t)mid << 8 | lsb;
+
+
+    // if(Is_ADC_Data_Valid(adc_value))
+    // {
+      float voltage = Convert_ADC_To_Voltage(adc_value);  
       float current =  (voltage * 797 )*3+  0.202;
 
       
 
-      if(current >0.1)
-      {
-      char buffer1[50];
-      sprintf(buffer1, "current_mA :%.6f voltage_sum  %.6f  mA\r\n", current ,voltage); // 格式化为两位小数
-      UART_SendChar(buffer1); // 发送到串口
-
-      }
-
-      // /* 累加电压值并增加计数 */
-      // voltage_sum_2 += current;
-
-      // voltage_sum_3 += voltage;
-      // sample_count_2++;
-
-      // /* 每1000次采样计算一次平均值 */
-      // if(sample_count_2 >= 1)
+      // if(sample_count_2 >= 100)
       // {
-      //   float avg_voltage = voltage_sum_2 / sample_count_2;
-      //   float avg_voltage_3 = voltage_sum_3 / sample_count_2;
-
-      //   if(avg_voltage > avg_voltage_3)
       // char buffer1[50];
       // sprintf(buffer1, "current_mA :%.6f voltage_sum  %.6f  mA\r\n", current ,voltage); // 格式化为两位小数
       // UART_SendChar(buffer1); // 发送到串口
-      //   /* 重置计数器和累加器 */
-      //   voltage_sum_2 = 0;
-      //   sample_count_2 = 0;
-      //   voltage_sum_3 =0;
+      // sample_count_2=0;
+
       // }
-    
+
+      /* 累加电压值并增加计数 */
+      voltage_sum_2 += current;
+
+
+      sample_count_2++;
+
+      if(sample_count_2 >= 1000)
+      {
+        float avg_voltage = voltage_sum_2 / sample_count_2;
+        char buffer1[50];
+        sprintf(buffer1, "current_mA :%.6f  mA\r\n", avg_voltage); // 格式化为两位小数
+        UART_SendChar(buffer1); // 发送到串口
+        /* 重置计数器和累加器 */
+        voltage_sum_2 = 0;
+        sample_count_2 = 0;
+      }
 
 
 
   }
 
-
+  
 
 
 }

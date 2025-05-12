@@ -286,7 +286,7 @@ build debug_gpio.elf: C_EXECUTABLE_LINKER__debug_gpio_Debug CMakeFiles/debug_gpi
 # Utility command for edit_cache
 
 build CMakeFiles/edit_cache.util: CUSTOM_COMMAND
-  COMMAND = C:\Windows\system32\cmd.exe /C "cd /D D:\STM32OBJ\test_1\debug_gpio\build && D:\tool\cmake\cmake_zip\cmake-3.31.3\bin\cmake-gui.exe -SD:\STM32OBJ\test_1\debug_gpio -BD:\STM32OBJ\test_1\debug_gpio\build"
+  COMMAND = C:\WINDOWS\system32\cmd.exe /C "cd /D D:\STM32OBJ\test_1\debug_gpio\build && D:\tool\cmake\cmake_zip\cmake-3.31.3\bin\cmake-gui.exe -SD:\STM32OBJ\test_1\debug_gpio -BD:\STM32OBJ\test_1\debug_gpio\build"
   DESC = Running CMake cache editor...
   pool = console
   restat = 1
@@ -298,7 +298,7 @@ build edit_cache: phony CMakeFiles/edit_cache.util
 # Utility command for rebuild_cache
 
 build CMakeFiles/rebuild_cache.util: CUSTOM_COMMAND
-  COMMAND = C:\Windows\system32\cmd.exe /C "cd /D D:\STM32OBJ\test_1\debug_gpio\build && D:\tool\cmake\cmake_zip\cmake-3.31.3\bin\cmake.exe --regenerate-during-build -SD:\STM32OBJ\test_1\debug_gpio -BD:\STM32OBJ\test_1\debug_gpio\build"
+  COMMAND = C:\WINDOWS\system32\cmd.exe /C "cd /D D:\STM32OBJ\test_1\debug_gpio\build && D:\tool\cmake\cmake_zip\cmake-3.31.3\bin\cmake.exe --regenerate-during-build -SD:\STM32OBJ\test_1\debug_gpio -BD:\STM32OBJ\test_1\debug_gpio\build"
   DESC = Running CMake to regenerate build system...
   pool = console
   restat = 1
@@ -315,7 +315,7 @@ build rebuild_cache: phony CMakeFiles/rebuild_cache.util
 # Utility command for edit_cache
 
 build cmake/stm32cubemx/CMakeFiles/edit_cache.util: CUSTOM_COMMAND
-  COMMAND = C:\Windows\system32\cmd.exe /C "cd /D D:\STM32OBJ\test_1\debug_gpio\build\cmake\stm32cubemx && D:\tool\cmake\cmake_zip\cmake-3.31.3\bin\cmake-gui.exe -SD:\STM32OBJ\test_1\debug_gpio -BD:\STM32OBJ\test_1\debug_gpio\build"
+  COMMAND = C:\WINDOWS\system32\cmd.exe /C "cd /D D:\STM32OBJ\test_1\debug_gpio\build\cmake\stm32cubemx && D:\tool\cmake\cmake_zip\cmake-3.31.3\bin\cmake-gui.exe -SD:\STM32OBJ\test_1\debug_gpio -BD:\STM32OBJ\test_1\debug_gpio\build"
   DESC = Running CMake cache editor...
   pool = console
   restat = 1
@@ -327,7 +327,7 @@ build cmake/stm32cubemx/edit_cache: phony cmake/stm32cubemx/CMakeFiles/edit_cach
 # Utility command for rebuild_cache
 
 build cmake/stm32cubemx/CMakeFiles/rebuild_cache.util: CUSTOM_COMMAND
-  COMMAND = C:\Windows\system32\cmd.exe /C "cd /D D:\STM32OBJ\test_1\debug_gpio\build\cmake\stm32cubemx && D:\tool\cmake\cmake_zip\cmake-3.31.3\bin\cmake.exe --regenerate-during-build -SD:\STM32OBJ\test_1\debug_gpio -BD:\STM32OBJ\test_1\debug_gpio\build"
+  COMMAND = C:\WINDOWS\system32\cmd.exe /C "cd /D D:\STM32OBJ\test_1\debug_gpio\build\cmake\stm32cubemx && D:\tool\cmake\cmake_zip\cmake-3.31.3\bin\cmake.exe --regenerate-during-build -SD:\STM32OBJ\test_1\debug_gpio -BD:\STM32OBJ\test_1\debug_gpio\build"
   DESC = Running CMake to regenerate build system...
   pool = console
   restat = 1
